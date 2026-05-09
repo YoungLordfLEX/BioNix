@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO-NIX</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:#030303;
+  color:white;
+  font-family:Arial, sans-serif;
+  overflow-x:hidden;
+}
+
+/* INTRO */
+
+.intro{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  animation:fadeOut 2.8s forwards;
+  animation-delay:2s;
+}
+
+.intro img{
+  width:300px;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.08);}
+  100%{transform:scale(1);}
+}
+
+@keyframes fadeOut{
+  to{
+    opacity:0;
+    visibility:hidden;
+  }
+}
+
+/* FONDO */
+
+.bg{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:
+  radial-gradient(circle at top left, rgba(0,255,120,0.12), transparent 25%),
+  radial-gradient(circle at bottom right, rgba(0,255,120,0.08), transparent 20%),
+  radial-gradient(circle at center, rgba(255,255,255,0.02), transparent 40%),
+  #030303;
+}
+
+/* HEADER */
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:25px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  backdrop-filter:blur(10px);
+}
+
+.logo{
+  width:140px;
+  filter:drop-shadow(0 0 15px #00ff88);
+}
+
+.cart-icon{
+  position:relative;
+  cursor:pointer;
+  font-size:28px;
+}
+
+.cart-count{
+  position:absolute;
+  top:-10px;
+  right:-12px;
+  background:#00ff88;
+  color:black;
+  font-size:12px;
+  font-weight:bold;
+  padding:4px 7px;
+  border-radius:50%;
+}
+
+/* FILTROS */
+
+.filters{
+  display:flex;
+  gap:12px;
+  padding:20px;
+  flex-wrap:wrap;
+}
+
+.filter-btn{
+  background:#0d0d0d;
+  border:1px solid #00ff88;
+  color:#00ff88;
+  padding:10px 20px;
+  cursor:pointer;
+  transition:0.3s;
+  font-weight:bold;
+}
+
+.filter-btn:hover{
+  background:#00ff88;
+  color:black;
+  transform:translateY(-2px);
+}
+
+/* GRID */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:28px;
+  padding:20px;
+}
+
+/* CARD */
+
+.card{
+  background:rgba(15,15,15,0.92);
+  border:1px solid rgba(255,255,255,0.05);
+  overflow:hidden;
+  transition:0.35s;
+  position:relative;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 0 25px rgba(0,255,120,0.15);
+}
+
+.card img{
+  width:100%;
+  height:420px;
+  object-fit:cover;
+  transition:0.5s;
+}
+
+.card:hover img{
+  transform:scale(1.05);
+}
+
+/* INFO */
+
+.info{
+  padding:18px;
+}
+
+.info h3{
+  margin-bottom:10px;
+  font-size:24px;
+}
+
+.price{
+  color:#00ff88;
+  font-weight:bold;
+  margin-bottom:14px;
+  font-size:20px;
+}
+
+/* BOTON */
+
+.btn{
+  width:100%;
+  padding:15px;
+  background:transparent;
+  border:1px solid #00ff88;
+  color:#00ff88;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+  position:relative;
+  overflow:hidden;
+}
+
+.btn:hover{
+  background:#00ff88;
+  color:black;
+  box-shadow:0 0 20px #00ff88;
+}
+
+/* MODAL */
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.96);
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:999;
+}
+
+.modal img{
+  max-width:85%;
+  max-height:75vh;
+  object-fit:contain;
+  animation:fadeImg 0.25s;
+}
+
+@keyframes fadeImg{
+  from{
+    opacity:0;
+    transform:scale(0.95);
+  }
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+.close{
+  position:absolute;
+  top:20px;
+  right:30px;
+  font-size:45px;
+  cursor:pointer;
+}
+
+.arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:60px;
+  color:#00ff88;
+  cursor:pointer;
+  user-select:none;
+  transition:0.2s;
+}
+
+.arrow:hover{
+  transform:translateY(-50%) scale(1.15);
+  text-shadow:0 0 20px #00ff88;
+}
+
+.left{
+  left:40px;
+}
+
+.right{
+  right:40px;
+}
+
+/* CARRITO */
+
+.cart{
+  position:fixed;
+  top:0;
+  right:-360px;
+  width:340px;
+  height:100%;
+  background:#0d0d0d;
+  border-left:1px solid rgba(255,255,255,0.08);
+  padding:20px;
+  transition:0.4s;
+  z-index:9999;
+  overflow:auto;
+}
+
+.cart.active{
+  right:0;
+}
+
+.cart h2{
+  margin-bottom:20px;
+}
+
+.cart-item{
+  border-bottom:1px solid #222;
+  padding:12px 0;
+}
+
+.remove{
+  color:red;
+  cursor:pointer;
+  float:right;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="intro">
+  <img src="logo.png">
+</div>
+
+<header>
+  <img src="logo.png" class="logo">
+
+  <div class="cart-icon" onclick="toggleCart()">
+    🛒
+    <div class="cart-count" id="cartCount">0</div>
+  </div>
+</header>
+
+<div class="filters">
+  <button class="filter-btn" onclick="filterCategory('all')">TODO</button>
+  <button class="filter-btn" onclick="filterCategory('hoodie')">HOODIES</button>
+  <button class="filter-btn" onclick="filterCategory('remera')">REMERAS</button>
+  <button class="filter-btn" onclick="filterCategory('gorro')">GORROS</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+  <div class="close" onclick="closeModal()">✕</div>
+
+  <div class="arrow left" onclick="prev()">‹</div>
+
+  <img id="modalImg">
+
+  <div class="arrow right" onclick="next()">›</div>
+
+  <button class="btn" style="max-width:400px;margin-top:20px;" onclick="addToCart(currentProduct)">
+    AGREGAR AL CARRITO
+  </button>
+
+</div>
+
+<!-- CARRITO -->
+
+<div class="cart" id="cart">
+  <h2>Carrito</h2>
+  <div id="cartItems"></div>
+</div>
+
+<script>
+
+let currentImages = [];
+let currentIndex = 0;
+let currentProduct = null;
+
+let cart = [];
+
+const products = [
+
+{
+name:"Hoodie BioNix 01",
+category:"hoodie",
+price:"59.999",
+images:["hoodie1_frente.png","hoodie1_reverso.png"]
+},
+
+{
+name:"Hoodie BioNix 02",
+category:"hoodie",
+price:"62.999",
+images:["hoodie2_frente.png","hoodie2_reverso.png"]
+},
+
+{
+name:"Hoodie BioNix 03",
+category:"hoodie",
+price:"64.999",
+images:["hoodie3_frente.png","hoodie3_reverso.png"]
+},
+
+{
+name:"Remera BioNix 01",
+category:"remera",
+price:"29.999",
+images:["remera1_frente.png","remera1_reverso.png"]
+},
+
+{
+name:"Remera BioNix 02",
+category:"remera",
+price:"34.999",
+images:["remera2_frente.png","remera2_reverso.png"]
+},
+
+{
+name:"Remera BioNix 03",
+category:"remera",
+price:"36.999",
+images:["remera3_frente.png","remera3_reverso.png"]
+},
+
+{
+name:"Remera BioNix 04",
+category:"remera",
+price:"39.999",
+images:["remera4_frente.png","remera4_reverso.png"]
+}
+
+];
+
+const grid = document.getElementById("grid");
+
+function render(items = products){
+
+grid.innerHTML="";
+
+items.forEach(p=>{
+
+const div = document.createElement("div");
+div.className="card";
+
+div.innerHTML = `
+<img src="${p.images[0]}">
+
+<div class="info">
+<h3>${p.name}</h3>
+<div class="price">$${p.price}</div>
+
+<button class="btn">
+VER PRODUCTO
+</button>
+</div>
+`;
+
+div.querySelector(".btn").onclick = ()=>{
+openModal(p);
+};
+
+grid.appendChild(div);
+
+});
+
+}
+
+/* FILTRO */
+
+function filterCategory(category){
+
+if(category === "all"){
+render(products);
+return;
+}
+
+const filtered = products.filter(p=>p.category === category);
+
+render(filtered);
+
+}
+
+/* MODAL */
+
+function openModal(product){
+
+currentImages = product.images;
+currentIndex = 0;
+currentProduct = product;
+
+document.getElementById("modalImg").src = currentImages[0];
+
+document.getElementById("modal").style.display="flex";
+
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+
+function next(){
+
+currentIndex = (currentIndex + 1) % currentImages.length;
+
+document.getElementById("modalImg").src = currentImages[currentIndex];
+
+}
+
+function prev(){
+
+currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+
+document.getElementById("modalImg").src = currentImages[currentIndex];
+
+}
+
+/* CARRITO */
+
+function addToCart(product){
+
+cart.push(product);
+
+updateCart();
+
+}
+
+function updateCart(){
+
+const container = document.getElementById("cartItems");
+
+container.innerHTML="";
+
+cart.forEach((item,index)=>{
+
+container.innerHTML += `
+<div class="cart-item">
+${item.name} - $${item.price}
+<span class="remove" onclick="removeItem(${index})">✕</span>
+</div>
+`;
+
+});
+
+document.getElementById("cartCount").innerText = cart.length;
+
+}
+
+function removeItem(i){
+
+cart.splice(i,1);
+
+updateCart();
+
+}
+
+function toggleCart(){
+
+document.getElementById("cart").classList.toggle("active");
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
+}
+
+.card {
+    margin:20px;
+    background:#111;
+    padding:15px;
+    border-radius:10px;
+    width:250px;
+}
+
+img {
+    width:100%;
+    border-radius:10px;
+}
+
+button {
+    margin-top:10px;
+    padding:10px;
+    background:#a3ff12;
+    border:none;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>BIO-NIX 👽</h1>
+<p>NOT FROM THIS EARTH</p>
+
+<div class="grid">
+
+<div class="card">
+<h3>Hoodie</h3>
+<img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=500&q=80">
+<button>Comprar</button>
+</div>
+
+<div class="card">
+<h3>Hoodie</h3>
+<img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=500&q=80">
+<button>Comprar</button>
+</div>
+
+<div class="card">
+<h3>Remera</h3>
+<img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=500&q=80">
+<button>Comprar</button>
+</div>
+
+<div class="card">
+<h3>Remera</h3>
+<img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=500&q=80">
+<button>Comprar</button>
+</div>
+
+<div class="card">
+<h3>Gorro</h3>
+<img src="https://images.unsplash.com/photo-1516822003754-cca485356ecb?auto=format&fit=crop&w=500&q=80">
+<button>Comprar</button>
+</div>
+
+<div class="card">
+<h3>Gorro</h3>
+<img src="https://images.unsplash.com/photo-1542068829-1115f7259450?auto=format&fit=crop&w=500&q=80">
+<button>Comprar</button>
+</div>
+
+</div>
+
+</body>
+</html>
